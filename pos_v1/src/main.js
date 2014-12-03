@@ -22,7 +22,7 @@ function add_goods_information_to_shopping_list(shopping_list, barcode, number) 
     }
 
     if(i == shopping_list.length) {
-        shopping_list[i] = {"barcode": barcode, "purchase_number" : number, "free_number": 0, "cost" : 0};
+        shopping_list[i] = {"barcode": barcode, "purchase_number" : number, "free_number": 0, "cost" : 0.00};
         return;
     }
 
@@ -41,7 +41,7 @@ function get_shopping_list(inputs){
     return shopping_list;
 }
 
-function get_good_information_by_barcode(all_items, barcode) {
+function get_goods_information_by_barcode(all_items, barcode) {
     for(var i = 0; i < all_items.length; i++) {
         if(all_items[i].barcode == barcode){
             return all_items[i];
@@ -60,50 +60,89 @@ function get_goods_promotion_information(purchase_goods_information, promotion_i
     return false;
 }
 
-function get_cost_from_purchase_goods_information(purchase_goods_information, good_information,  promotions_informations) {
+function get_cost_from_purchase_goods_information(purchase_goods_information, goods_information,  promotions_informations) {
     for(var i = 0; i < promotions_informations.length; i++) {
         if(get_goods_promotion_information(purchase_goods_information, promotions_informations[i]) == true)
             break;
     }
-    return (purchase_goods_information.purchase_number - purchase_goods_information.free_number) * good_information.price;
+    return (purchase_goods_information.purchase_number - purchase_goods_information.free_number) * goods_information.price;
 }
 
 function get_goods_cost_in_shopping_list(shopping_list, all_items, promotions_informations) {
-    var good_information;
+    var goods_information;
     for(var i = 0; i < shopping_list.length; i++) {
-        good_information = get_good_information_by_barcode(all_items, shopping_list[i].barcode);
-        if(good_information != null) {
-            shopping_list[i].cost = get_cost_from_purchase_goods_information(shopping_list[i], good_information, promotions_informations);
-
+        goods_information = get_goods_information_by_barcode(all_items, shopping_list[i].barcode);
+        if(goods_information != null) {
+            shopping_list[i].cost = get_cost_from_purchase_goods_information(shopping_list[i], goods_information, promotions_informations);
         }
 
     }
 }
 
-function print_shopping_list(shopping_list) {
+function get_shopping_list_inventory(shopping_list, all_items) {
+    var shopping_list_information;
+    var goods_information;
+    shopping_list_information = "***<没钱赚商店>购物清单***\n";
     for(var i = 0; i < shopping_list.length; i++) {
-
+        goods_information = get_goods_information_by_barcode(all_items, shopping_list[i].barcode);
+        if(goods_information == null)
+            continue;
+        shopping_list_information += "名称：" + goods_information.name + "，数量：" + shopping_list[i].purchase_number + goods_information.unit + "，单价：" + goods_information.price.toFixed(2)
+                                    + "(元)，小计：" + shopping_list[i].cost.toFixed(2) + "(元)\n";
     }
+    return shopping_list_information += "----------------------\n";
 }
 
-function print_free_goods_list(shopping_list) {
-
+function get_free_goods_inventory(shopping_list, all_item) {
+    var goods_information;
+    var promotion_goods_information;
+    promotion_goods_information = "挥泪赠送商品：\n";
+    for(var i = 0; i < shopping_list.length; i++) {
+        goods_information = get_goods_information_by_barcode(all_item, shopping_list[i].barcode);
+        if(goods_information == null || shopping_list[i].free_number == 0)
+            continue;
+        promotion_goods_information += "名称：" + goods_information.name + "，数量：" + shopping_list[i].free_number + goods_information.unit + "\n";
+    }
+    promotion_goods_information +=   "----------------------\n";
+    return promotion_goods_information;
 }
 
-function print_summary_information(shopping_list) {
+function get_total_cost(shopping_list) {
+    var total_cost = 0;
+    for(var i = 0; i < shopping_list.length; i++) {
+        total_cost += shopping_list[i].cost;
+    }
+    return total_cost;
+}
 
+function get_total_save(shopping_list, all_items) {
+    var total_save = 0;
+    var goods_information;
+    for(var i = 0; i < shopping_list.length; i++) {
+        goods_information = get_goods_information_by_barcode(all_items, shopping_list[i].barcode);
+        if(goods_information == null)
+            continue;
+        total_save += shopping_list[i].free_number * goods_information.price;
+    }
+    return total_save;
+}
+
+function get_summary_information(shopping_list, all_items) {
+    var total_cost = get_total_cost(shopping_list);
+    var total_save = get_total_save(shopping_list, all_items);
+    return "总计：" + total_cost.toFixed(2) + "(元)\n" + "节省：" + total_save.toFixed(2) + "(元)\n" + "**********************";
 }
 
 function printInventory(inputs) {
     var shopping_list;
     var all_items = loadAllItems();
     var promotions_informations = loadPromotions();
+    var inventory;
     shopping_list = get_shopping_list(inputs);
     get_goods_cost_in_shopping_list(shopping_list, all_items, promotions_informations);
-    console.log( '***<没钱赚商店>购物清单***\n');
-    print_shopping_list(shopping_list);
-    print_free_goods_list();
-    print_summary_information();
-    console.log( '**********************');
+    inventory = get_shopping_list_inventory(shopping_list, all_items);
+    inventory += get_free_goods_inventory(shopping_list, all_items);
+    inventory += get_summary_information(shopping_list, all_items);
+    console.log(inventory);
 }
 
