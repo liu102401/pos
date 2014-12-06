@@ -11,3 +11,15 @@ function get_shopping_inventory(shopping_list) {
     return shopping_inventory;
 }
 
+function get_free_goods_inventory(shopping_list) {
+    var free_goods_inventory = '';
+    _.chain(shopping_list)
+    .filter(function (shopping_goods) {
+        return shopping_goods.free_number > 0;
+    })
+    .each(function (free_goods) {
+        free_goods_inventory += '名称：' + free_goods.name + '，数量：' + free_goods.free_number + free_goods.unit + '\n';
+    })
+    return free_goods_inventory;
+}
+

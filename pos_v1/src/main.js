@@ -29,13 +29,7 @@ function printInventory(inputs) {
     inventory += get_shopping_inventory(shopping_list);
     inventory += '----------------------\n';
     inventory += '挥泪赠送商品：\n';
-    _.chain(shopping_list)
-        .filter(function(shopping_goods) {
-            return shopping_goods.free_number > 0;
-        })
-        .each(function(free_goods) {
-        inventory += '名称：' + free_goods.name + '，数量：' + free_goods.free_number + free_goods.unit + '\n';
-    })
+    inventory += get_free_goods_inventory(shopping_list);
     inventory += '----------------------\n';
     inventory +=
         '总计：51.00(元)\n' +
