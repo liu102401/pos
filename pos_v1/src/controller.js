@@ -22,3 +22,15 @@ function get_total_free(shopping_list) {
     return total_free;
 }
 
+function get_goods_information(barcode) {
+    var goods_information;
+    _.find(loadAllItems(), function (item) {
+        if (item.barcode == barcode) {
+            goods_information = item;
+            return true;
+        }
+        return false;
+    })
+    return goods_information;
+}
+
