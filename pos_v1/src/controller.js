@@ -34,3 +34,8 @@ function get_goods_information(barcode) {
     return goods_information;
 }
 
+function count_goods_cost_in_shopping_list(shopping_list) {
+    _.each(shopping_list, function(shopping_goods) {
+        shopping_goods.subtotal = (shopping_goods.purchase_number - shopping_goods.free_number) * shopping_goods.price;
+    })
+}
