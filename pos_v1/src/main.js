@@ -4,6 +4,7 @@ function printInventory(inputs) {
         {
             name: '雪碧',
             purchase_number: 5,
+            free_number: 1,
             price: 3.00,
             unit: '瓶',
             subtotal: 12.00},
@@ -17,22 +18,10 @@ function printInventory(inputs) {
         {
             name: '方便面',
             purchase_number: '3',
+            free_number: 1,
             price: 4.50,
             unit: '袋',
             subtotal: 9.00
-        }
-    ]
-
-    var free_inventory = [
-        {
-            name: '雪碧',
-            free_number: 1,
-            unit: '瓶'
-        },
-        {
-            name: '方便面',
-            free_number: 1,
-            unit: '袋'
         }
     ]
 
@@ -43,7 +32,11 @@ function printInventory(inputs) {
     });
     inventory += '----------------------\n';
     inventory += '挥泪赠送商品：\n';
-    _.each(free_inventory, function(free_goods) {
+    _.chain(shopping_inventory)
+        .filter(function(shopping_goods) {
+            return shopping_goods.free_number > 0;
+        })
+        .each(function(free_goods) {
         inventory += '名称：' + free_goods.name + '，数量：' + free_goods.free_number + free_goods.unit + '\n';
     })
     inventory += '----------------------\n';
