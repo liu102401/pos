@@ -22,6 +22,20 @@ function printInventory(inputs) {
             subtotal: 9.00
         }
     ]
+
+    var free_inventory = [
+        {
+            name: '雪碧',
+            free_number: 1,
+            unit: '瓶'
+        },
+        {
+            name: '方便面',
+            free_number: 1,
+            unit: '袋'
+        }
+    ]
+
     inventory = '***<没钱赚商店>购物清单***\n';
     _.each(shopping_inventory, function(shopping_goods){
         inventory += '名称：' + shopping_goods.name + '，数量：' + shopping_goods.purchase_number + shopping_goods.unit + '，单价：'
@@ -29,9 +43,9 @@ function printInventory(inputs) {
     });
     inventory += '----------------------\n';
     inventory += '挥泪赠送商品：\n';
-    inventory +=
-        '名称：雪碧，数量：1瓶\n' +
-        '名称：方便面，数量：1袋\n'
+    _.each(free_inventory, function(free_goods) {
+        inventory += '名称：' + free_goods.name + '，数量：' + free_goods.free_number + free_goods.unit + '\n';
+    })
     inventory += '----------------------\n';
     inventory +=
         '总计：51.00(元)\n' +
