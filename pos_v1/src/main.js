@@ -1,6 +1,6 @@
 function printInventory(inputs) {
     var inventory;
-    var shopping_inventory = [
+    var shopping_list = [
         {
             name: '雪碧',
             purchase_number: 5,
@@ -26,13 +26,10 @@ function printInventory(inputs) {
     ]
 
     inventory = '***<没钱赚商店>购物清单***\n';
-    _.each(shopping_inventory, function(shopping_goods){
-        inventory += '名称：' + shopping_goods.name + '，数量：' + shopping_goods.purchase_number + shopping_goods.unit + '，单价：'
-        + shopping_goods.price.toFixed(2) + '(元)，小计：' + shopping_goods.subtotal.toFixed(2) + '(元)\n';
-    });
+    inventory += get_shopping_inventory(shopping_list);
     inventory += '----------------------\n';
     inventory += '挥泪赠送商品：\n';
-    _.chain(shopping_inventory)
+    _.chain(shopping_list)
         .filter(function(shopping_goods) {
             return shopping_goods.free_number > 0;
         })
