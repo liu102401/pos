@@ -63,3 +63,29 @@ function count_free_goods_number_in_shopping_list(shopping_list) {
         count_free_goods_with_promotions_information(shopping_goods)
     })
 }
+function get_shopping_list() {
+return [
+            {
+                barcode: 'ITEM000001',
+                name: '雪碧',
+                purchase_number: 5,
+                price: 3.00,
+                unit: '瓶'
+            },
+            {
+                barcode: 'ITEM000003',
+                name: '荔枝',
+                purchase_number: 2,
+                price: 15.00,
+                unit: '斤'
+            },
+            {
+                barcode: 'ITEM000005',
+                name: '方便面',
+                purchase_number: '3',
+                price: 4.50,
+                unit: '袋'
+            }
+        ];
+    }
+
