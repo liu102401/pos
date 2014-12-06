@@ -23,3 +23,12 @@ function get_free_goods_inventory(shopping_list) {
     return free_goods_inventory;
 }
 
+function get_summary_inventory(shopping_list) {
+    var total_cost = get_total_cost(shopping_list);
+    var total_free = get_total_free(shopping_list);
+    var summary_inventory =
+        '总计：' + total_cost.toFixed(2) + '(元)\n' +
+        '节省：' + total_free.toFixed(2) + '(元)\n';
+    return summary_inventory;
+}
+

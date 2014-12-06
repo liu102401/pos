@@ -31,9 +31,7 @@ function printInventory(inputs) {
     inventory += '挥泪赠送商品：\n';
     inventory += get_free_goods_inventory(shopping_list);
     inventory += '----------------------\n';
-    inventory +=
-        '总计：51.00(元)\n' +
-        '节省：7.50(元)\n';
+    inventory += get_summary_inventory(shopping_list);
     inventory += '**********************';
     console.log(inventory);
 }
