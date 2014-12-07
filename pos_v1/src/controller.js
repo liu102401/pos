@@ -40,20 +40,16 @@ function count_goods_cost_in_shopping_list(shopping_list) {
     })
 }
 
-function count_free_goods_with_promotion(shopping_goods, promotion_information) {
-    _.find(promotion_information.barcodes, function(barcode) {
-        if(shopping_goods.barcode == barcode && promotion_information.type == 'BUY_TWO_GET_ONE_FREE') {
-            shopping_goods.free_number = 1;
-            return true;
-        }
-        return false;
-    })
-}
 
 function count_free_goods_with_promotions_information(shopping_goods) {
     promotions_information = loadPromotions();
-    _.each(promotions_information, function(promotion_information) {
-        count_free_goods_with_promotion(shopping_goods, promotion_information)
+    _.find(promotions_information, function(promotion_information) {
+        if(promotion_information.barcodes.indexOf(shopping_goods.barcode) < 0) {
+            return;
+        }
+        if(promotion_information.type == 'BUY_TWO_GET_ONE_FREE') {
+            shopping_goods.free_number = 1;
+        }
     })
 }
 
@@ -63,29 +59,41 @@ function count_free_goods_number_in_shopping_list(shopping_list) {
         count_free_goods_with_promotions_information(shopping_goods)
     })
 }
-function get_shopping_list() {
-return [
-            {
-                barcode: 'ITEM000001',
-                name: '雪碧',
-                purchase_number: 5,
-                price: 3.00,
-                unit: '瓶'
-            },
-            {
-                barcode: 'ITEM000003',
-                name: '荔枝',
-                purchase_number: 2,
-                price: 15.00,
-                unit: '斤'
-            },
-            {
-                barcode: 'ITEM000005',
-                name: '方便面',
-                purchase_number: '3',
-                price: 4.50,
-                unit: '袋'
-            }
-        ];
+
+function get_barcode_from_input_barcode_information(input_barcode_information) {
+    return input_barcode_information.split('-')[0];
+}
+
+function get_number_from_input_barcode_information(input_barcode_information) {
+    var number = input_barcode_information.split('-')[1];
+    if(number == null)
+        return 1
+    return number
+}
+
+function add_goods_information_to_shopping_list(shopping_list, barcode, number) {
+    var goods_information = get_goods_information(barcode)
+    var goods_index_in_shopping_list = -1;
+    _.each(shopping_list, function(shopping_goods, index) {
+        if(shopping_goods.barcode == barcode) {
+            goods_index_in_shopping_list = index
+        }
+    })
+    if(goods_index_in_shopping_list < 0) {
+        goods_information.purchase_number = number
+        shopping_list[shopping_list.length] = goods_information
+        return
     }
+    shopping_list[goods_index_in_shopping_list].purchase_number += number;
+}
+
+function get_shopping_list(inputs) {
+    var shopping_list = []
+    _.each(inputs, function(input) {
+        var barcode = get_barcode_from_input_barcode_information(input)
+        var number = get_number_from_input_barcode_information(input)
+        add_goods_information_to_shopping_list(shopping_list, barcode, number)
+    })
+    return shopping_list
+}
 
