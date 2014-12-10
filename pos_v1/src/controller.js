@@ -37,10 +37,13 @@ function count_goods_cost_in_shopping_list(shopping_list) {
 
 
 function count_free_goods_with_promotions_information(shopping_goods) {
-    promotions_information = loadPromotions();
+    var promotions_information = loadPromotions();
     var promotion_information = _.find(promotions_information, function(promotion_information) {
-        return promotion_information.barcodes.indexOf(shopping_goods.barcode) < 0;
+        return promotion_information.barcodes.indexOf(shopping_goods.barcode) > 0;
     })
+    if(promotion_information == null) {
+        return;
+    }
     if(promotion_information.type == 'BUY_TWO_GET_ONE_FREE') {
         shopping_goods.free_number = 1;
     }
