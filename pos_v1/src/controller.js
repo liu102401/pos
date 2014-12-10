@@ -69,18 +69,15 @@ function get_number_from_input_barcode_information(input_barcode_information) {
 
 function add_goods_information_to_shopping_list(shopping_list, barcode, number) {
     var goods_information = get_goods_information(barcode)
-    var goods_index_in_shopping_list = -1;
-    _.each(shopping_list, function(shopping_goods, index) {
-        if(shopping_goods.barcode == barcode) {
-            goods_index_in_shopping_list = index
-        }
+    var shopping_goods = _.find(shopping_list, function(shopping_goods) {
+        return shopping_goods.barcode == barcode
     })
-    if(goods_index_in_shopping_list < 0) {
-        goods_information.purchase_number = number
-        shopping_list[shopping_list.length] = goods_information
-        return
+    if(shopping_goods == null) {
+        goods_information.purchase_number = number;
+        shopping_list[shopping_list.length] = goods_information;
+        return;
     }
-    shopping_list[goods_index_in_shopping_list].purchase_number += number;
+    shopping_goods.purchase_number +=number;
 }
 
 function get_shopping_list(inputs) {
